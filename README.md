@@ -1,2 +1,2 @@
-# bossfuck
-brainfuck based programming environment for DOS
+# BOSS
+Brainfuck Operating Shell System for DOS
