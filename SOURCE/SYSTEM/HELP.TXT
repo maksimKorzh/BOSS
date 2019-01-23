@@ -1,0 +1,24 @@
+
+
+    &BOSS& commands:
+
+     new - $clear source buffer$
+    edit - $change source buffer$
+    save - $store source buffer to disk$
+    load - $load source file from disk$
+    view - $check source buffer$
+    exit - $quit from BOSS$
+     run - $execute source buffer's code$
+
+
+    &HELP& commands:
+
+    help - $show this page$
+    copy - $view BOSS licence$
+    boss - $BOSS environment info$
+    wiki - $brainfuck programming language info$
+    code - $some useful brainfucking snippets$
+   ascii - $ASCII characters table$
+
+
+    Press any key to exit...

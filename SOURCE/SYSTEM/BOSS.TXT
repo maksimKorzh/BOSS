@@ -1,0 +1,24 @@
+
+                      &- Brainfuck Operating Shell System -&
+
+                                  version 0.1
+                                  
+                                by Maksim Korzh
+           
+           $BOSS is the very first completed product of mine that I'm
+           heavily using myself. Probably that happens because of my
+           true belief in the programming potential of brainfuck. It
+           would be nice if the community arises around this project.
+
+           BOSS is an experimental brainfuck programming environment
+           inspired by the rare ZX SPECTRUM computer which had BASIC
+           interpreter as the only way to interact with. Most people
+           used cassete recorders in order to load and save programs
+           while I didn't have any, so no opportunity of saving work
+           was ever possible, that's why I had to type in the source
+           code of a desirable program every time over again...$
+
+                         freesoft.for.people@gmail.com
+
+
+                            Press any key to exit...

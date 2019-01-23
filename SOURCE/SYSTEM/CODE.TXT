@@ -1,0 +1,24 @@
+
+                               &Useful code snippets&
+
+                   Basic brainfuck cell manipulation operations
+                  
+    #[->+<]# - $move the value of the current cell one cell right
+               (add current cell to the next one)$
+    
+    #+++++>+++[-<->]<.# - $subtract 2 numbers$
+    
+    #+++++[->+++<]>.# - $Multiply 2 numbers$
+
+    #++++++++++++[--->+<]>.# - $Divide 2 numbers$
+    
+    #,[.-[->+<]>+]# - $Truth-Machine$
+
+
+                   Please note that BOSS uses 2 extra commands
+
+    ## #- $print debug info$
+    #!# - $seperate code from data$
+
+
+                           Press any key to continue...

@@ -1,0 +1,23 @@
+
+                      &- Brainfuck Operating Shell System -&
+
+
+                      Don't follow fancy programming trends,
+                  be free to find your own way of doing things.
+
+
+                   $<<<>>>>>     <<<>>>     <>>>>>     <>>>>>
+                   <<     >>   <<    >>   <<         <<
+                   <<     >>   <<    >>   <<         <<
+                   <<<>>>>     <<    >>    <<<<<>    <<<<<<>
+                   <<     >>   <<    >>         >>         >>
+                   <<     >>   <<    >>         >>         >>
+                   <<<>>>>>     <<<>>>    >>>>>>>    >>>>>>>$
+
+
+                            
+                                CODE IN BRAINFUCK!
+
+                        #Type help to get BOSS command list#
+
+
