@@ -68,6 +68,7 @@
 char memory[MEMORY_SIZE];
 char *src;
 char *mem;
+char key;
 int loop;
 
 void ExecuteBrainfuck()
@@ -76,8 +77,6 @@ void ExecuteBrainfuck()
 
     src = source_buffer;
     mem = memory;
-
-    memory[0] = -127;
     
     while(*src)
     {
@@ -141,8 +140,25 @@ void ExecuteBrainfuck()
                 --*mem;
                 break;
                 
-            case '.': putch(*mem); break;
-            case ',': *mem = getch(); break;
+            case '.':
+                if(*mem == '\n')
+                {
+                    cputs("\r\n");
+                    break;
+                }
+                
+                putch(*mem);
+                break;
+                
+            case ',':
+                key = getch();
+                
+                if(key == '\r')
+                    *mem = '\n';
+                else
+                    *mem = key;
+   
+                break;
                 
             case '[':
 
@@ -178,6 +194,10 @@ void ExecuteBrainfuck()
                 textcolor(GREEN); 
                 cprintf("\r\n[cell #%d: %d]\r\n", mem - memory, *mem);
                 textcolor(LIGHTGRAY);
+                break;
+
+            case '$':
+                cputs("\r\n");
                 break;
         }
         

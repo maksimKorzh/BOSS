@@ -17,8 +17,8 @@
 
                    Please note that BOSS uses 2 extra commands
 
-    ## #- $print debug info$
-    #!# - $seperate code from data$
+    ## #- $print debug info - [cell "ID": "VALUE"] -$
+    #$# - $add "\r\n" after "," command$
 
 
                            Press any key to continue...

@@ -67,7 +67,7 @@ void ViewSource()
 {
     char *src = source_buffer;
 
-    textcolor(LIGHTGRAY);
+    textcolor(DARKGRAY);
 
     while(*src)
     {

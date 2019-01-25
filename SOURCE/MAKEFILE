@@ -2,6 +2,6 @@ all:
 #	gcc boss.c shell.c edit.c -o boss.exe
 #	gcc -c boss.c -o boss.o
 #	gcc -c shell.c -o shell.o
-#	gcc -c edit.c -o edit.o
-	gcc -c bf.c -o bf.o
+	gcc -c edit.c -o edit.o
+#	gcc -c bf.c -o bf.o
 	gcc boss.o shell.o edit.o bf.o -o boss.exe
