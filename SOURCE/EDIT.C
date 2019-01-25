@@ -63,10 +63,8 @@
 
 #include "BOSS.H"
 
-void ViewSource()
+void ViewSource(char *src, int mode)
 {
-    char *src = source_buffer;
-
     textcolor(DARKGRAY);
 
     while(*src)
@@ -99,8 +97,11 @@ void ViewSource()
                 break;
         }
 
-     	if(*src == '\n')
+     	if(*src == '\n' && mode == VIEW)
     	    cputs("\r\n");
+    	    
+    	else if(*src == '\n' &&  mode == EDIT)
+    	    return;
     
     	else if(*src != '\n')
     	{
@@ -114,6 +115,21 @@ void ViewSource()
     textcolor(LIGHTGRAY);
 }
 
+void ScrollDown(char *src)
+{   
+    textcolor(GREEN);
+    cputs("\r brainfuck $ ");
+
+    if(*src == '\n' || *src == '\r')
+        src++;
+
+    while(*src)
+    {
+        putch(*src);
+        src++;
+    }
+}
+
 void EditSource()
 {
     int char_count = 0;
@@ -125,15 +141,17 @@ void EditSource()
     int cursor_X = 0;
     int cursor_Y = 0;
 
+    textcolor(GREEN);
     cputs("\r\n brainfuck $ ");
 
     while(key != 27)
     {
+
         textcolor(DARKGRAY);
         key = getch();
 
         switch(key)
-        {
+        {    
             case 27:
                 *src = '\n';
                 textcolor(LIGHTGRAY);
@@ -173,16 +191,40 @@ void EditSource()
                     cputs("\b \b");
                 }
 
+                textcolor(DARKGRAY);
                 break;
             
             case '\r':
                 *src = '\n';
-                textcolor(LIGHTGRAY);
+                textcolor(GREEN);
                 cputs("\r\n brainfuck $ ");
                 src++;
                 break;
+
+            case 'H':
+            {
+                char *temp_src = src;
+                src--;
+            
+                while(*src != '\n')
+                { 
+                    if(!(src - source_buffer))
+                        break;
+
+                    src--;
+                }
+
+                ScrollDown(src);
+                //src = temp_src;
+                break;
+            }
         }
 
+        if(key == 'H') continue;
+        else if(key == 'K') continue;
+        else if(key == 'M') continue;
+        else if(key == 'P') continue;        
+        
         if(key != '\r')
         {
             (key == '\b') ? (*src-- = 0) : (*src = (char)key);

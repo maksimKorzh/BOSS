@@ -68,6 +68,8 @@
 #define INFO_SIZE 2048
 #define COMMAND_SIZE 10
 
+enum {VIEW, EDIT};
+
 /* Globals */
 extern char logo_buffer[INFO_SIZE];
 extern char source_buffer[SOURCE_SIZE];
@@ -83,7 +85,7 @@ extern  int ProcessCommand();
 extern void ShellLoop();
 
 /* EDIT.C */
-extern void ViewSource();
+extern void ViewSource(char *src, int mode);
 extern void EditSource();
 
 /* BF.C */
