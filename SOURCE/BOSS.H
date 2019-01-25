@@ -86,4 +86,7 @@ extern void ShellLoop();
 extern void ViewSource();
 extern void EditSource();
 
+/* BF.C */
+extern void ExecuteBrainfuck();
+
 #endif

@@ -56,146 +56,131 @@
 /*********************************************************************************\
 ;---------------------------------------------------------------------------------;
 ;                                                                                 ;
-;                                 Brainfuck shell                                 ;
+;                              Brainfuck interpreter                              ;
 ;                                                                                 ;
 ;---------------------------------------------------------------------------------;
 \*********************************************************************************/
 
 #include "BOSS.H"
 
-void ViewSource()
+#define MEMORY_SIZE 65536
+
+char memory[MEMORY_SIZE];
+char *src;
+char *mem;
+int loop;
+
+void ExecuteBrainfuck()
 {
-    char *src = source_buffer;
+    memset(&memory[0], 0, sizeof(memory));
 
-    textcolor(LIGHTGRAY);
+    src = source_buffer;
+    mem = memory;
 
+    memory[0] = -127;
+    
     while(*src)
     {
         switch(*src)
         {
             case '>':
-            case '<':
-                textcolor(LIGHTGREEN);
-                break;
+                *mem++;
                 
-            case '+':
-            case '-':
-                textcolor(LIGHTRED);
-                break;
-
-            case '.':
-            case ',':
-                textcolor(YELLOW);
-                break;
-
-            case '[':
-            case ']':
-                textcolor(LIGHTMAGENTA);
-                break;
-
-            case '#':
-            case '!':
-                textcolor(LIGHTBLUE);
-                break;
-        }
-
-     	if(*src == '\n')
-    	    cputs("\r\n");
-    
-    	else if(*src != '\n')
-    	{
-    	    putch(*src);
-    	    textcolor(DARKGRAY);
-    	}
-
-        src++;
-    }
-
-    textcolor(LIGHTGRAY);
-}
-
-void EditSource()
-{
-    int char_count = 0;
-    char *src = source_buffer;
-
-    while(*src) src++;
-    
-    int key = 0;
-    int cursor_X = 0;
-    int cursor_Y = 0;
-
-    cputs("\r\n brainfuck $ ");
-
-    while(key != 27)
-    {
-        textcolor(DARKGRAY);
-        key = getch();
-
-        switch(key)
-        {
-            case 27:
-                *src = '\n';
-                textcolor(LIGHTGRAY);
-                return;
-
-            case '>':
-            case '<':
-                textcolor(LIGHTGREEN);
-                break;
-                
-            case '+':
-            case '-':
-                textcolor(LIGHTRED);
-                break;
-
-            case '.':
-            case ',':
-                textcolor(YELLOW);
-                break;
-
-            case '[':
-            case ']':
-                textcolor(LIGHTMAGENTA);
-                break;
-
-            case '#':
-            case '!':
-                textcolor(LIGHTBLUE);
-                break;
-
-            case '\b':
-                cursor_X = wherex();
-
-                if(cursor_X > 14)
+                if((mem - memory) > 65535)
                 {
-                    src--;
-                    cputs("\b \b");
+                    textcolor(YELLOW);
+                    cprintf("\r\n Warning: cell #%d is out of right bound,\r\n", mem - memory);
+                    mem = memory;
+                    cprintf("          cell ID has been set to '%d'\r\n", mem - memory);
+                    textcolor(LIGHTGRAY);
+                    break;
+                }
+                
+                break;
+                
+            case '<':
+                *mem--;
+                
+                if((mem - memory) < 0)
+                {
+                    textcolor(YELLOW);
+                    cprintf("\r\n Warning: cell #%d is out of left bound,\r\n", mem - memory);
+                    mem = memory + 65535;
+                    cprintf("          cell ID has been set to '%d'\r\n", mem - memory);
+                    textcolor(LIGHTGRAY);
+                    break;
+                }
+                
+                break;
+                
+            case '+':
+                if(*mem == 127)
+                {
+                    textcolor(YELLOW);
+                    cprintf("\r\n Warning: cell #%d value '%d' is out of positive range,\r\n", mem - memory, *mem + 1);
+                    *mem = -128;
+                    cprintf("          cell #%d value has been set to '%d'\r\n", mem - memory, *mem );
+                    textcolor(LIGHTGRAY);
+                    break;
+                }
+
+                ++*mem;
+                break;
+                
+            case '-':
+                if(*mem == -128)
+                {
+                    textcolor(YELLOW);
+                    cprintf("\r\n Warning: cell #%d value '%d' is out of negative range,\r\n", mem - memory, *mem - 1);
+                    *mem = 127;
+                    cprintf("          cell #%d value has been set to '%d'\r\n", mem - memory, *mem );
+                    textcolor(LIGHTGRAY);
+                    break;
+                }
+                
+                --*mem;
+                break;
+                
+            case '.': putch(*mem); break;
+            case ',': *mem = getch(); break;
+                
+            case '[':
+
+                if(!*mem)
+                {
+                    loop = 1;
+                    while(loop)
+                    {
+                        *src++;
+
+                        if(*src == '[') loop++;
+                        if(*src == ']') loop--;
+                    }
                 }
 
                 break;
-            
-            case '\r':
-                *src = '\n';
+
+            case ']':
+
+                loop = 1;
+                while(loop)
+                {
+                    *src--;
+                   
+                    if(*src == '[') loop--;
+                    if(*src == ']') loop++;
+                }
+
+                *src--;
+                break;
+
+            case '#':
+                textcolor(GREEN); 
+                cprintf("\r\n[cell #%d: %d]\r\n", mem - memory, *mem);
                 textcolor(LIGHTGRAY);
-                cputs("\r\n brainfuck $ ");
-                src++;
                 break;
         }
-
-        if(key != '\r')
-        {
-            (key == '\b') ? (*src-- = 0) : (*src = (char)key);
-            
-            if(*src)
-            {            
-                if(key != '\b')
-                    putch(*src);
-                    
-                textcolor(DARKGRAY);
-            }
-            
-            src++;
-        }
+        
+        *src++;
     }
 }
