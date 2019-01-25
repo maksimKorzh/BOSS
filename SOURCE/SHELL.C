@@ -56,16 +56,22 @@
 #include "BOSS.H"
 
 char source_buffer[SOURCE_SIZE];
-
 char logo_buffer[INFO_SIZE];
 char info_buffer[INFO_SIZE];
 char user_command[COMMAND_SIZE] = {COMMAND_SIZE};
 
-void LoadFile(char *filename, char *access, char *buffer, int file_size)
+void LoadFile(char *filename, char *buffer, int file_size)
 {
     memset(&info_buffer[0], 0, sizeof(info_buffer));
-    FILE *file = fopen(filename, access);
+    FILE *file = fopen(filename, "r");
     fread(buffer, 1, file_size, file);
+    fclose(file);
+}
+
+void SaveFile(char *filename, char *buffer, int file_size)
+{
+    FILE *file = fopen(filename, "w");
+    fwrite(buffer, 1, file_size, file);
     fclose(file);
 }
 
@@ -90,42 +96,43 @@ void PrintFile(char *file_buffer, int color_1, int color_2, int color_3)
 
     while(*file_buffer)
     {
-	switch(*file_buffer)
-	{
-	    case '$':
-		PickColor(color_1, &color_lock);
-		file_buffer++;
-		break;
-
-	    case '&':
-		PickColor(color_2, &color_lock);
-		file_buffer++;
-		break;
-
-	    case '#':
-		PickColor(color_3, &color_lock);
-		file_buffer++;
-		break;
-	}
-
-	if(*file_buffer == '\n')
-	    cputs("\r\n");
-
-	else if(*file_buffer != '\n')
-	    putch(*file_buffer);
-
-	file_buffer++;
+    	switch(*file_buffer)
+    	{
+    	    case '$':
+    		PickColor(color_1, &color_lock);
+    		file_buffer++;
+    		break;
+    
+    	    case '&':
+    		PickColor(color_2, &color_lock);
+    		file_buffer++;
+    		break;
+    
+    	    case '#':
+    		PickColor(color_3, &color_lock);
+    		file_buffer++;
+    		break;
+    	}
+    
+    	if(*file_buffer == '\n')
+    	    cputs("\r\n");
+    
+    	else if(*file_buffer != '\n')
+    	    putch(*file_buffer);
+    
+    	file_buffer++;
     }
 }
 
 void RefreshScreen()
 {
     clrscr();
-    _setcursortype(_SOLIDCURSOR);
+    _setcursortype(_NOCURSOR);
     PrintFile(logo_buffer, DARKGRAY, BROWN, MAGENTA);
     textcolor(GREEN);
     cputs(" BOSS $ ");
     textcolor(LIGHTGRAY);
+    _setcursortype(_SOLIDCURSOR);
 }
 
 int ProcessCommand()
@@ -144,22 +151,34 @@ int ProcessCommand()
 
 	else if(!strncmp(user_command + 2, "edit", 4))
     {
-        
+        clrscr();
+        ViewSource();
+        EditSource();
+        cputs("\n\n\r           Source buffer has been saved. Press any key to continue...\r\n");
+        _setcursortype(_NOCURSOR);
     }
 
 	else if(!strncmp(user_command + 2, "save", 4))
     {
-        
+        SaveFile("SYSTEM/SOURCE.BF", source_buffer, SOURCE_SIZE);
+        gotoxy(9, 24);
+        cputs("Source buffer has been written to disk. Press any key to continue...");
     }
 
 	else if(!strncmp(user_command + 2, "load", 4))
     {
-        
+        memset(&source_buffer[0], 0, sizeof(source_buffer));
+        LoadFile("SYSTEM/SOURCE.BF", source_buffer, SOURCE_SIZE);
+        gotoxy(9, 24);
+        cputs("Source buffer has been loaded. Press any key to continue...");
     }
 
 	else if(!strncmp(user_command + 2, "view", 4))
     {
-        
+        clrscr();
+        ViewSource();
+        cputs("\n\n\r              Source buffer content. Press any key to continue...\r\n");    
+        _setcursortype(_NOCURSOR);
     }
 
 	else if(!strncmp(user_command + 2, "exit", 4))
@@ -175,7 +194,7 @@ int ProcessCommand()
 	else if(!strncmp(user_command + 2, "help", 4))
     {
         clrscr();
-        LoadFile("SYSTEM/HELP.TXT", "r", info_buffer, INFO_SIZE);
+        LoadFile("SYSTEM/HELP.TXT", info_buffer, INFO_SIZE);
         PrintFile(info_buffer, DARKGRAY, BROWN, MAGENTA);
         _setcursortype(_NOCURSOR);
     }
@@ -183,7 +202,7 @@ int ProcessCommand()
     else if(!strncmp(user_command + 2, "copy", 4))
     {
         clrscr();
-        LoadFile("SYSTEM/COPYING.TXT", "r", info_buffer, INFO_SIZE);
+        LoadFile("SYSTEM/COPYING.TXT", info_buffer, INFO_SIZE);
         PrintFile(info_buffer, DARKGRAY, BROWN, GREEN);
         _setcursortype(_NOCURSOR);
     }
@@ -191,7 +210,7 @@ int ProcessCommand()
 	else if(!strncmp(user_command + 2, "boss", 4))
     {
         clrscr();
-        LoadFile("SYSTEM/BOSS.TXT", "r", info_buffer, INFO_SIZE);
+        LoadFile("SYSTEM/BOSS.TXT", info_buffer, INFO_SIZE);
         PrintFile(info_buffer, DARKGRAY, BROWN, MAGENTA);
         _setcursortype(_NOCURSOR);
     }
@@ -199,7 +218,7 @@ int ProcessCommand()
 	else if(!strncmp(user_command + 2, "wiki", 4))
     {
         clrscr();
-        LoadFile("SYSTEM/WIKI.TXT", "r", info_buffer, INFO_SIZE);
+        LoadFile("SYSTEM/WIKI.TXT", info_buffer, INFO_SIZE);
         PrintFile(info_buffer, DARKGRAY, BROWN, MAGENTA);
         _setcursortype(_NOCURSOR);        
     }
@@ -207,7 +226,7 @@ int ProcessCommand()
 	else if(!strncmp(user_command + 2, "code", 4))
     {
         clrscr();
-        LoadFile("SYSTEM/CODE.TXT", "r", info_buffer, INFO_SIZE);
+        LoadFile("SYSTEM/CODE.TXT", info_buffer, INFO_SIZE);
         PrintFile(info_buffer, DARKGRAY, BROWN, MAGENTA);
         _setcursortype(_NOCURSOR);                
     }
@@ -215,7 +234,7 @@ int ProcessCommand()
 	else if(!strncmp(user_command + 2, "ascii", 5))
     {
         clrscr();
-        LoadFile("SYSTEM/ASCII.TXT", "r", info_buffer, INFO_SIZE);
+        LoadFile("SYSTEM/ASCII.TXT", info_buffer, INFO_SIZE);
         PrintFile(info_buffer, DARKGRAY, BROWN, DARKGRAY);
         _setcursortype(_NOCURSOR);        
     }
@@ -224,14 +243,15 @@ int ProcessCommand()
     {
         gotoxy(9, 24);
         printf("No such command!");
-        //getch();
     }
 
     return 1;
 }
 
 void ShellLoop()
-{   
+{
+    LoadFile("SYSTEM/LOGO.TXT", logo_buffer, INFO_SIZE);
+        
     while(1)
     {
         RefreshScreen();

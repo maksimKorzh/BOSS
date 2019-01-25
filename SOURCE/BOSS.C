@@ -57,15 +57,6 @@
 
 int main()
 {
-    LoadFile("SYSTEM/LOGO.TXT", "r", logo_buffer, INFO_SIZE);
     ShellLoop();
-
-    /*
-    textcolor(LIGHTGREEN); cputs(">>>><<<<");
-    textcolor(LIGHTRED); cputs("++++----");
-    textcolor(YELLOW); cputs("....,,,,");
-    textcolor(LIGHTMAGENTA); cputs("[[[[]]]]\r\n");
-    */
-
     return 0;
 }

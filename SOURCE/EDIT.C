@@ -53,37 +53,141 @@
 ;---------------------------------------------------------------------------------;
 \*********************************************************************************/
 
-#ifndef BOSS
-#define BOSS
+#include "BOSS.H"
 
-#include <stdio.h>
-#include <errno.h>
-#include <conio.h>
-#include <stdlib.h>
-#include <string.h>
+void ViewSource()
+{
+    char *src = source_buffer;
 
-#define VERSION "v 0.0.1"
+    textcolor(LIGHTGRAY);
 
-#define SOURCE_SIZE 25600
-#define INFO_SIZE 2048
-#define COMMAND_SIZE 10
+    while(*src)
+    {
+        switch(*src)
+        {
+            case '>':
+            case '<':
+                textcolor(LIGHTGREEN);
+                break;
+                
+            case '+':
+            case '-':
+                textcolor(LIGHTRED);
+                break;
 
-/* Globals */
-extern char logo_buffer[INFO_SIZE];
-extern char source_buffer[SOURCE_SIZE];
-extern char info_buffer[INFO_SIZE];
+            case '.':
+            case ',':
+                textcolor(YELLOW);
+                break;
 
-/* SHELL.C */
-extern void LoadFile(char *filename, char *buffer, int file_size);
-extern void SaveFile(char *filename, char *buffer, int file_size);
-extern void PickColor(int color_id, int *color_lock);
-extern void PrintFile(char *file_buffer, int color_1, int color_2, int color_3);
-extern void RefreshScreen();
-extern  int ProcessCommand();
-extern void ShellLoop();
+            case '[':
+            case ']':
+                textcolor(LIGHTMAGENTA);
+                break;
 
-/* EDIT.C */
-extern void ViewSource();
-extern void EditSource();
+            case '#':
+            case '!':
+                textcolor(LIGHTBLUE);
+                break;
+        }
 
-#endif
+     	if(*src == '\n')
+    	    cputs("\r\n");
+    
+    	else if(*src != '\n')
+    	{
+    	    putch(*src);
+    	    textcolor(DARKGRAY);
+    	}
+
+        src++;
+    }
+
+    textcolor(LIGHTGRAY);
+}
+
+void EditSource()
+{
+    int char_count = 0;
+    char *src = source_buffer;
+
+    while(*src) src++;
+    
+    int key = 0;
+    int cursor_X = 0;
+    int cursor_Y = 0;
+
+    cputs("\r\n brainfuck $ ");
+
+    while(key != 27)
+    {
+        textcolor(DARKGRAY);
+        key = getch();
+
+        switch(key)
+        {
+            case 27:
+                *src = '\n';
+                textcolor(LIGHTGRAY);
+                return;
+
+            case '>':
+            case '<':
+                textcolor(LIGHTGREEN);
+                break;
+                
+            case '+':
+            case '-':
+                textcolor(LIGHTRED);
+                break;
+
+            case '.':
+            case ',':
+                textcolor(YELLOW);
+                break;
+
+            case '[':
+            case ']':
+                textcolor(LIGHTMAGENTA);
+                break;
+
+            case '#':
+            case '!':
+                textcolor(LIGHTBLUE);
+                break;
+
+            case '\b':
+                cursor_X = wherex();
+
+                if(cursor_X > 14)
+                {
+                    src--;
+                    cputs("\b \b");
+                }
+
+                break;
+            
+            case '\r':
+                *src = '\n';
+                textcolor(LIGHTGRAY);
+                cputs("\r\n brainfuck $ ");
+                src++;
+                break;
+        }
+
+        if(key != '\r')
+        {
+            (key == '\b') ? (*src-- = 0) : (*src = (char)key);
+            
+            if(*src)
+            {            
+                if(key != '\b')
+                    putch(*src);
+                    
+                textcolor(DARKGRAY);
+            }
+            
+            src++;
+        }
+    }
+}
