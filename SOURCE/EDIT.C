@@ -63,9 +63,55 @@
 
 #include "BOSS.H"
 
+char *ScrollLine(char *src, int cur_x, int cur_y)
+{
+    char *start_line = src;
+
+    int key = 0;
+    
+    while(key != 13)
+    {
+        key = getch();
+
+        switch(key)
+        {   
+            case 'H':
+                while(start_line != source_buffer)
+                {
+                    start_line--;                
+                    if(*start_line == '\n') break;
+                }
+
+                clreol();
+                ViewSource(start_line, EDIT);
+                gotoxy(cur_x, cur_y);
+                
+                break;
+
+            case 'P':
+                while(*start_line)
+                {
+                    start_line++;
+                    if(*start_line == '\n') break;
+                }
+
+                clreol();
+                ViewSource(start_line, EDIT);
+                gotoxy(cur_x, cur_y);
+                
+                break;
+        }
+    }
+
+    return start_line + 1;
+}
+
 void ViewSource(char *src, int mode)
 {
+    cputs("");
     textcolor(DARKGRAY);
+
+    int line_lock = 0;
 
     while(*src)
     {
@@ -97,11 +143,42 @@ void ViewSource(char *src, int mode)
                 break;
         }
 
-     	if(*src == '\n' && mode == VIEW)
-    	    cputs("\r\n");
-    	    
-    	else if(*src == '\n' &&  mode == EDIT)
-    	    return;
+     	if(*src == '\n')
+     	{
+     	    if(mode == VIEW)
+     	    {
+     	        int cur_y = wherey();
+
+     	        if(cur_y < 22)
+     	        {
+    	            cputs("\r\n");
+                    
+                }
+                
+    	        else
+    	        {
+    	            textcolor(LIGHTGRAY);
+                    cputs("\n\n\r            Source buffer content. Press any key to see next page...\r\n");
+                    textcolor(DARKGRAY);
+                    _setcursortype(_NOCURSOR);
+    	            getch();
+                    clrscr();
+    	        }
+    	    }
+
+    	    else if(mode == EDIT)
+    	    {
+    	        if(!line_lock)
+    	            line_lock ^= 1;
+    	        
+    	        else if(line_lock == 1)
+    	        {
+    	            cputs("\r\n");
+    	            return;
+    	        }
+    	    }
+    	        
+    	}
     
     	else if(*src != '\n')
     	{
@@ -113,21 +190,6 @@ void ViewSource(char *src, int mode)
     }
 
     textcolor(LIGHTGRAY);
-}
-
-void ScrollDown(char *src)
-{   
-    textcolor(GREEN);
-    cputs("\r brainfuck $ ");
-
-    if(*src == '\n' || *src == '\r')
-        src++;
-
-    while(*src)
-    {
-        putch(*src);
-        src++;
-    }
 }
 
 void EditSource()
@@ -142,7 +204,7 @@ void EditSource()
     int cursor_Y = 0;
 
     textcolor(GREEN);
-    cputs("\r\n brainfuck $ ");
+    cputs("\r\n $ ");
 
     while(key != 27)
     {
@@ -153,7 +215,6 @@ void EditSource()
         switch(key)
         {    
             case 27:
-                *src = '\n';
                 textcolor(LIGHTGRAY);
                 return;
 
@@ -185,7 +246,7 @@ void EditSource()
             case '\b':
                 cursor_X = wherex();
 
-                if(cursor_X > 14)
+                if(cursor_X > 4)
                 {
                     src--;
                     cputs("\b \b");
@@ -195,37 +256,66 @@ void EditSource()
                 break;
             
             case '\r':
+                while(*src) src++;
+                while(wherex() < 79)
+                {
+                    *src = ' ';
+                    putch(*src);
+                    src++;
+                }
+
                 *src = '\n';
                 textcolor(GREEN);
-                cputs("\r\n brainfuck $ ");
+                cputs("\r\n $ ");
+                textcolor(LIGHTGRAY);
+                clreol();
                 src++;
                 break;
 
+            case 'P':
             case 'H':
-            {
-                char *temp_src = src;
-                src--;
-            
-                while(*src != '\n')
-                { 
-                    if(!(src - source_buffer))
-                        break;
+                _setcursortype(_NOCURSOR);
+                src = ScrollLine(src, wherex(), wherey());
+                _setcursortype(_SOLIDCURSOR);
+                gotoxy(4, wherey());
+                break;
 
+            case 'M':
+                if(wherex() < 79)
+                {
+                    gotoxy(wherex() + 1, wherey());
+
+                    if(!*src)
+                    {
+                        *src = ' ';
+                        src++;
+                    }
+                    
+                    else
+                        src++;
+                }
+                   
+                break;
+
+            case 'K':
+                if(wherex() > 4)
+                {
+                    gotoxy(wherex() - 1, wherey());
                     src--;
                 }
 
-                ScrollDown(src);
-                //src = temp_src;
                 break;
-            }
         }
 
         if(key == 'H') continue;
+
         else if(key == 'K') continue;
         else if(key == 'M') continue;
         else if(key == 'P') continue;        
-        
-        if(key != '\r')
+
+        if(!(char)key) continue;
+
+        if(key != '\r' && wherex() < 79)
         {
             (key == '\b') ? (*src-- = 0) : (*src = (char)key);
             

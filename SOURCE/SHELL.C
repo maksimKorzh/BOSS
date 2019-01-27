@@ -161,7 +161,6 @@ int ProcessCommand()
 	else if(!strncmp(user_command + 2, "edit", 4))
     {
         clrscr();
-        ViewSource(source_buffer, VIEW);
         EditSource();
         cputs("\n\n\r           Source buffer has been saved. Press any key to continue...\r\n");
         _setcursortype(_NOCURSOR);
@@ -186,7 +185,7 @@ int ProcessCommand()
     {
         clrscr();
         ViewSource(source_buffer, VIEW);
-        cputs("\n\n\r              Source buffer content. Press any key to continue...\r\n");    
+        cputs("\n\n\r                 Source buffer content. Press any key to exit...\r\n");    
         _setcursortype(_NOCURSOR);
     }
 
