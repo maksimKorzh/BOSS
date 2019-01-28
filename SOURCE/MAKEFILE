@@ -1,5 +1,5 @@
 all:
-	gcc boss.c shell.c edit.c -o boss.exe
+	gcc boss.c shell.c edit.c bf.c -o boss.exe
 #	gcc -c boss.c -o boss.o
 #	gcc -c shell.c -o shell.o
 #	gcc -c edit.c -o edit.o
