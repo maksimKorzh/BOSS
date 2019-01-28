@@ -15,7 +15,7 @@ Brainfuck Operating Shell System for DOS
 
 # Release
 BOSS v0.1 has been released! See the 'release' tab.
-
+https://github.com/maksimKorzh/BOSS/releases
 
 # Installation
 
@@ -24,7 +24,7 @@ BOSS v0.1 has been released! See the 'release' tab.
     been tested successfully. So in order to run BOSS you'll have
     to install freeDOS. The guide of how to do this might be found
     at freeDOS's website.
-    [http://wiki.freedos.org/install/]
+    ![(http://wiki.freedos.org/install/)]
 
 
 # Usage
