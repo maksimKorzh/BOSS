@@ -24,7 +24,8 @@ https://github.com/maksimKorzh/BOSS/releases
     been tested successfully. So in order to run BOSS you'll have
     to install freeDOS. The guide of how to do this might be found
     at freeDOS's website.
-    ![(http://wiki.freedos.org/install/)]
+   
+   http://wiki.freedos.org/install/
 
 
 # Usage
