@@ -24,6 +24,7 @@ BOSS v0.1 has been released! See the 'release' tab.
     been tested successfully. So in order to run BOSS you'll have
     to install freeDOS. The guide of how to do this might be found
     at freeDOS's website.
+    [http://wiki.freedos.org/install/]
 
 
 # Usage
