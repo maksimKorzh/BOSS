@@ -12,6 +12,9 @@ Brainfuck Operating Shell System for DOS
     true belief in the programming potential of brainfuck. It
     would be nice if the community arises around this project.
 
+# YouTube video
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/MY4Y_sTVoLs/0.jpg)](https://www.youtube.com/watch?v=MY4Y_sTVoLs)
+
 
 # Release
 BOSS v0.1 has been released! See the 'release' tab.
